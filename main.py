@@ -12,13 +12,10 @@ Employee position
 Employee location
 Employee status (current/former)
 Review title
-Number of helpful votes
 Pros text
 Cons text
 Advice to mgmttext
 Overall rating
-Recommends
-Positive outlook
 '''
 
 import time
@@ -154,14 +151,6 @@ def scrape(field, review, author):
     def scrape_rev_title(review):
         return review.find_element(By.CLASS_NAME, 'reviewLink').text.strip('"')
 
-    def scrape_helpful(review):
-        try:
-            helpful = review.find_element(By.CLASS_NAME, 'helpfulCount')
-            res = helpful.text[helpful.text.find('(') + 1: -1]
-        except Exception:
-            res = 0
-        return res
-
     def expand_show_more(section):
         try:
             more_link = section.find_element(By.CLASS_NAME, 'v2__EIReviewDetailsV2__continueReading')
@@ -173,7 +162,7 @@ def scrape(field, review, author):
     def scrape_pros(review):
         try:
             pros = review.find_element(By.CSS_SELECTOR, 'span[data-test="pros"]')
-            res = pros.text.strip()
+            res = pros.text.replace("\n", " ").strip()
         except Exception:
             res = np.nan
         return res
@@ -181,7 +170,7 @@ def scrape(field, review, author):
     def scrape_cons(review):
         try:
             cons = review.find_element(By.CSS_SELECTOR, 'span[data-test="cons"]')
-            res = cons.text.strip()
+            res = cons.text.replace("\n", " ").strip()
         except Exception:
             res = np.nan
         return res
@@ -206,40 +195,16 @@ def scrape(field, review, author):
             res = np.nan
         return res
 
-    def scrape_recommends(review):
-        try:
-            res = review.find_element(By.CLASS_NAME, 'recommends').text
-            res = res.split('\n')
-            return res[0]
-        except:
-            return np.nan
-    
-    def scrape_outlook(review):
-        try:
-            res = review.find_element(By.CLASS_NAME, 'recommends').text
-            res = res.split('\n')
-            if len(res) == 2 or len(res) == 3:
-                if 'CEO' in res[1]:
-                    return np.nan
-                return res[1]
-            return np.nan
-        except:
-            return np.nan
-
     funcs = [
         scrape_date,
         scrape_emp_title,
         scrape_location,
         scrape_status,
         scrape_rev_title,
-        scrape_helpful,
         scrape_pros,
         scrape_cons,
         scrape_advice,
-        scrape_overall_rating,
-        scrape_recommends,
-        scrape_outlook
-
+        scrape_overall_rating
     ]
 
     fdict = dict((s, f) for (s, f) in zip(SCHEMA, funcs))

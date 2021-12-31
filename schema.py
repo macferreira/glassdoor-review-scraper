@@ -4,11 +4,8 @@ SCHEMA = [
     'location',
     'employee_status',
     'review_title',
-    'helpful',
     'pros',
     'cons',
     'advice_to_mgmt',
-    'rating_overall',
-    'recommends',
-    'positive_outlook'
+    'rating_overall'
 ]
