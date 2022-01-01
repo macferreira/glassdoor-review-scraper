@@ -333,7 +333,11 @@ def sign_in():
     time.sleep(3)
     browser.get(args.url)
 
-
+def accept_cookies():
+    logger.info('Accepting cookies')
+    accept_cookies_btn = browser.find_element(By.ID, 'onetrust-accept-btn-handler')
+    accept_cookies_btn.click()
+    time.sleep(2)
 
 def get_browser():
     logger.info('Configuring browser')
@@ -395,6 +399,8 @@ def main():
         page[0] = get_current_page()
         logger.info(f'Starting from page {page[0]:,}.')
         time.sleep(1)
+
+    accept_cookies()
 
     reviews_df = extract_from_page()
     res = res.append(reviews_df)
